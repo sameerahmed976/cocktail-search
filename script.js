@@ -3,7 +3,7 @@ import { getFetch } from "./utils/getFetch.js";
 const formSearch = getElement(".form-search");
 // console.log("🚀 ~ file: script.js ~ line 4 ~ form", form)
 const products = getElement(".products");
-
+const loading = getElement(".loading");
 // const url = `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=`;
 
 let drinksData;
@@ -12,7 +12,8 @@ let id;
 formSearch.addEventListener("keyup", async (e) => {
   e.preventDefault();
   //   console.log("click");
-  const formSearchValue = formSearch.value;
+  loading.classList.add("show-loading");
+  let formSearchValue = formSearch.value;
   if (formSearchValue) {
     drinksData = await getFetch(
       `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${formSearchValue}`
@@ -21,8 +22,9 @@ formSearch.addEventListener("keyup", async (e) => {
     //   "🚀 ~ file: script.js ~ line 21 ~ formSearch.addEventListener ~ drinksData",
     //   drinksData
     // );
-
+    loading.classList.remove("show-loading");
     displayProduct();
+    formSearch.value = "";
   }
 });
 

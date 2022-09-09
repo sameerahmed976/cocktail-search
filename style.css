@@ -140,3 +140,21 @@ input:focus {
   font-weight: bold;
   letter-spacing: 1px;
 }
+
+.loading {
+  display: none;
+  width: 6rem;
+  height: 6rem;
+  border: 20px solid white;
+  border-top: 5px solid green;
+  border-bottom: 5px solid rgb(0, 109, 250);
+  border-left: 5px solid rgb(97, 9, 238);
+  border-right: 5px solid rgb(181, 8, 224);
+  border-radius: 50%;
+  animation: spin 1s linear alternate infinite both;
+  margin: 0 auto;
+}
+
+.show-loading {
+  display: block;
+}
