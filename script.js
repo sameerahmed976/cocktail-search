@@ -9,26 +9,52 @@ const loading = getElement(".loading");
 let drinksData;
 let id;
 
-formSearch.addEventListener("keyup", async (e) => {
-  e.preventDefault();
-  //   console.log("click");
-  loading.classList.add("show-loading");
-  let formSearchValue = formSearch.value;
-  if (formSearchValue) {
-    drinksData = await getFetch(
-      `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${formSearchValue}`
-    );
-    // console.log(
-    //   "🚀 ~ file: script.js ~ line 21 ~ formSearch.addEventListener ~ drinksData",
-    //   drinksData
-    // );
-    loading.classList.remove("show-loading");
-    displayProduct();
-    formSearch.value = "";
-  }
-});
+const debounce = (func, delay) => {
+  let timer;
+
+  return (...args) => {
+    if (timer) {
+      clearTimeout(timer);
+    }
+    timer = setTimeout(() => {
+      func.apply(null, args);
+    }, delay);
+  };
+};
+
+formSearch.addEventListener(
+  "keyup",
+  debounce(async (e) => {
+    e.preventDefault();
+    //   console.log("click");
+    loading.classList.add("show-loading");
+    products.innerHTML = "";
+    let formSearchValue = formSearch.value;
+    if (formSearchValue) {
+      drinksData = await getFetch(
+        `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${formSearchValue}`
+      );
+      // console.log(
+      //   "🚀 ~ file: script.js ~ line 21 ~ formSearch.addEventListener ~ drinksData",
+      //   drinksData
+      // );
+
+      if (drinksData.drinks === null) {
+        loading.classList.remove("show-loading");
+        products.innerHTML = `<h1 class="error" >No Drinks </h1>`;
+      }
+
+      loading.classList.remove("show-loading");
+      displayProduct();
+      formSearch.value = "";
+    }
+  }, 500)
+);
 
 const displayProduct = () => {
+  if (!drinksData.drinks) {
+    return;
+  }
   products.innerHTML = drinksData.drinks
     .map((drink) => {
       return `<a href="drinks.html" class="card-image"  data-id=${drink.idDrink}  >
